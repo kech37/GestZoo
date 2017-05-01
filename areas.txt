@@ -1,0 +1,5 @@
+AreaA 500 2 AreaB AreaC
+AreaB 200 1 AreaA
+AreaC 100 3 AreaA AreaD AreaE
+AreaD 1000 1 AreaC
+AreaE 250 1 AreaC
