@@ -22,18 +22,18 @@ int contaLinhas(char *nome) {
     }
 }
 
-bool iniciarVetor(struct BlocoMemoria * bm) {
+bool iniciarVetor(struct AreasHelper * ArrayAreas) {
     FILE *f = fopen(FICHEIRO_AREAS, "r");
     int nrLinhas, i, j;
     if (f != NULL) {
         nrLinhas = contaLinhas(FICHEIRO_AREAS);
         if (nrLinhas > 0) {
-            bm->areas = malloc(sizeof (AREA) * nrLinhas);
-            bm->tamanho = nrLinhas;
+            ArrayAreas->areas = malloc(sizeof (AREA) * nrLinhas);
+            ArrayAreas->tamanho = nrLinhas;
             for (i = 0; i < nrLinhas; i++) {
-                fscanf(f, "%49s %d %d", bm->areas[i].id, &bm->areas[i].capacidade, &bm->areas[i].nrAreasAdj);
-                for (j = 0; j < bm->areas[i].nrAreasAdj; j++) {
-                    fscanf(f, "%49s", bm->areas[i].areasAdj[j]);
+                fscanf(f, "%49s %d %d", ArrayAreas->areas[i].id, &ArrayAreas->areas[i].capacidade, &ArrayAreas->areas[i].nrAreasAdj);
+                for (j = 0; j < ArrayAreas->areas[i].nrAreasAdj; j++) {
+                    fscanf(f, "%49s", ArrayAreas->areas[i].areasAdj[j]);
                 }
             }
         } else {
@@ -47,7 +47,7 @@ bool iniciarVetor(struct BlocoMemoria * bm) {
     }
 }
 
-bool gravarFicheiroAreas(struct BlocoMemoria * bm){
+bool gravarFicheiroAreas(struct AreasHelper * bm){
     FILE *f = fopen(FICHEIRO_AREAS, "w");
     if(f != NULL){
         for(int i = 0; i < bm->tamanho; i++){

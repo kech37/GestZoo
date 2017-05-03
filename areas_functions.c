@@ -6,10 +6,10 @@
 
 #include "util.h"
 
-AREA* procurarAreaNome(struct BlocoMemoria * bm, char *nome) {
-    for (int i = 0; i < bm->tamanho; i++) {
-        if (!strcmp(bm->areas[i].id, nome)) {
-            return &bm->areas[i];
+AREA* procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome) {
+    for (int i = 0; i < ArrayAreas->tamanho; i++) {
+        if (!strcmp(ArrayAreas->areas[i].id, nome)) {
+            return &ArrayAreas->areas[i];
         }
     }
     return NULL;
@@ -27,9 +27,9 @@ void listarArea(AREA* areasInput) {
     }
 }
 
-void listarTodasAreas(struct BlocoMemoria * bm) {
-    for (int i = 0; i < bm->tamanho; i++) {
-        listarArea(&bm->areas[i]);
+void listarTodasAreas(struct AreasHelper * ArrayAreas) {
+    for (int i = 0; i < ArrayAreas->tamanho; i++) {
+        listarArea(&ArrayAreas->areas[i]);
     }
 }
 
@@ -42,44 +42,44 @@ int verificaAdjacentes(AREA *a, char *nome) {
     return 0;
 }
 
-void criarNovaArea(struct BlocoMemoria * bm) {
+void criarNovaArea(struct AreasHelper * ArrayAreas) {
     char id[50];
     int flag = 0, op;
-    bm->areas = realloc(bm->areas, sizeof (AREA) * bm->tamanho + 1);
-    bm->tamanho++;
+    ArrayAreas->areas = realloc(ArrayAreas->areas, sizeof (AREA) * ArrayAreas->tamanho + 1);
+    ArrayAreas->tamanho++;
     printf("Indique o ID da nova area: ");
     do {
         scanf("%49s", id);
-        if (procurarAreaNome(bm, id) != NULL) {
+        if (procurarAreaNome(ArrayAreas, id) != NULL) {
             printf("[ERRO] Esse ID ja estar a ser utilizado, escolha outro!\n");
         } else {
             flag = 1;
-            strcpy(bm->areas[bm->tamanho - 1].id, id);
+            strcpy(ArrayAreas->areas[ArrayAreas->tamanho - 1].id, id);
         }
     } while (flag == 0);
     printf("Indique a capacidade da area: ");
     do {
-        scanf("%d", &bm->areas[bm->tamanho - 1].capacidade);
-        if (bm->areas[bm->tamanho - 1].capacidade <= 0) {
+        scanf("%d", &ArrayAreas->areas[ArrayAreas->tamanho - 1].capacidade);
+        if (ArrayAreas->areas[ArrayAreas->tamanho - 1].capacidade <= 0) {
             printf("[ERRO] Capacidade tem que ser maior que zero!\n");
         }
-    } while (bm->areas[bm->tamanho - 1].capacidade <= 0);
-    bm->areas[bm->tamanho - 1].nrAreasAdj = 0;
-    for (int i = 1; i <= bm->tamanho - 1; i++) {
-        printf("%d - %s\n", i, bm->areas[i - 1].id);
+    } while (ArrayAreas->areas[ArrayAreas->tamanho - 1].capacidade <= 0);
+    ArrayAreas->areas[ArrayAreas->tamanho - 1].nrAreasAdj = 0;
+    for (int i = 1; i <= ArrayAreas->tamanho - 1; i++) {
+        printf("%d - %s\n", i, ArrayAreas->areas[i - 1].id);
     }
     printf("0 - Para terminar\n");
     do {
         printf("Indique o nr da area que deseja adicionar: ");
         scanf("%d", &op);
-        if (op > 0 && op < bm->tamanho) {
-            if (bm->areas[op - 1].nrAreasAdj < 3) {
-                if (!verificaAdjacentes(&bm->areas[bm->tamanho - 1], bm->areas[op - 1].id)) {
-                    strcpy(bm->areas[bm->tamanho - 1].areasAdj[bm->areas[bm->tamanho - 1].nrAreasAdj], bm->areas[op - 1].id);
-                    bm->areas[bm->tamanho - 1].nrAreasAdj++;
-                    strcpy(bm->areas[op - 1].areasAdj[bm->areas[op - 1].nrAreasAdj], bm->areas[bm->tamanho - 1].id);
-                    bm->areas[op - 1].nrAreasAdj++;
-                    printf("Area %s adiciona.\n", bm->areas[op - 1].id);
+        if (op > 0 && op < ArrayAreas->tamanho) {
+            if (ArrayAreas->areas[op - 1].nrAreasAdj < 3) {
+                if (!verificaAdjacentes(&ArrayAreas->areas[ArrayAreas->tamanho - 1], ArrayAreas->areas[op - 1].id)) {
+                    strcpy(ArrayAreas->areas[ArrayAreas->tamanho - 1].areasAdj[ArrayAreas->areas[ArrayAreas->tamanho - 1].nrAreasAdj], ArrayAreas->areas[op - 1].id);
+                    ArrayAreas->areas[ArrayAreas->tamanho - 1].nrAreasAdj++;
+                    strcpy(ArrayAreas->areas[op - 1].areasAdj[ArrayAreas->areas[op - 1].nrAreasAdj], ArrayAreas->areas[ArrayAreas->tamanho - 1].id);
+                    ArrayAreas->areas[op - 1].nrAreasAdj++;
+                    printf("Area %s adiciona.\n", ArrayAreas->areas[op - 1].id);
                 }else{
                     printf("[ERRO] Essa area ja e adjacente!\n");
                 }
@@ -89,50 +89,50 @@ void criarNovaArea(struct BlocoMemoria * bm) {
         } else if (op != 0) {
             printf("[ERRO] Coloque um nr de uma area valida.\n");
         }
-    } while (op != 0 && bm->areas[bm->tamanho - 1].nrAreasAdj < 3);
+    } while (op != 0 && ArrayAreas->areas[ArrayAreas->tamanho - 1].nrAreasAdj < 3);
 }
 
-void eliminarArea(struct BlocoMemoria * bm) {
+void eliminarArea(struct AreasHelper * ArrayAreas) {
     //TODO VERIFICAR SE A AREA TEM ANIMAIS, ANTES DE ELIMINAR
     int op;
-    for (int i = 1; i <= bm->tamanho; i++) {
-        printf("%d - %s\n", i, bm->areas[i - 1].id);
+    for (int i = 1; i <= ArrayAreas->tamanho; i++) {
+        printf("%d - %s\n", i, ArrayAreas->areas[i - 1].id);
     }
     printf("0 - Para cancelar\n");
     printf("Indique o nr da area que deseja eliminar: ");
     do {
         scanf("%d", &op);
-        if (op < 0 || op > bm->tamanho) {
+        if (op < 0 || op > ArrayAreas->tamanho) {
             printf("[ERRO] Escolha um nr de uma area valido.\n");
         }
-    } while (op < 0 || op > bm->tamanho);
+    } while (op < 0 || op > ArrayAreas->tamanho);
     if (op != 0) {
-        AREA *temp = malloc(sizeof (AREA) * bm->tamanho);
-        for (int i = 0; i < bm->tamanho; i++) {
-            strcpy(temp[i].id, bm->areas[i].id);
-            temp[i].capacidade = bm->areas[i].capacidade;
-            temp[i].nrAreasAdj = bm->areas[i].nrAreasAdj;
-            for (int j = 0; j < bm->areas[i].nrAreasAdj; j++) {
-                strcpy(temp[i].areasAdj[j], bm->areas[i].areasAdj[j]);
+        AREA *temp = malloc(sizeof (AREA) * ArrayAreas->tamanho);
+        for (int i = 0; i < ArrayAreas->tamanho; i++) {
+            strcpy(temp[i].id, ArrayAreas->areas[i].id);
+            temp[i].capacidade = ArrayAreas->areas[i].capacidade;
+            temp[i].nrAreasAdj = ArrayAreas->areas[i].nrAreasAdj;
+            for (int j = 0; j < ArrayAreas->areas[i].nrAreasAdj; j++) {
+                strcpy(temp[i].areasAdj[j], ArrayAreas->areas[i].areasAdj[j]);
             }
         }
-        free(bm->areas);
-        bm->areas = malloc(sizeof (AREA) * bm->tamanho - 1);
-        for (int i = 0, j = 0; i < bm->tamanho; i++) {
+        free(ArrayAreas->areas);
+        ArrayAreas->areas = malloc(sizeof (AREA) * ArrayAreas->tamanho - 1);
+        for (int i = 0, j = 0; i < ArrayAreas->tamanho; i++) {
             if (i != (op - 1)) {
-                strcpy(bm->areas[j].id, temp[i].id);
-                bm->areas[j].capacidade = temp[i].capacidade;
-                bm->areas[j].nrAreasAdj = 0;
+                strcpy(ArrayAreas->areas[j].id, temp[i].id);
+                ArrayAreas->areas[j].capacidade = temp[i].capacidade;
+                ArrayAreas->areas[j].nrAreasAdj = 0;
                 for (int k = 0; k < temp[i].nrAreasAdj; k++) {
                     if (strcmp(temp[i].areasAdj[k], temp[op - 1].id)) {
-                        strcpy(bm->areas[j].areasAdj[bm->areas[j].nrAreasAdj], temp[i].areasAdj[k]);
-                        bm->areas[j].nrAreasAdj++;
+                        strcpy(ArrayAreas->areas[j].areasAdj[ArrayAreas->areas[j].nrAreasAdj], temp[i].areasAdj[k]);
+                        ArrayAreas->areas[j].nrAreasAdj++;
                     }
                 }
                 j++;
             }
         }
-        bm->tamanho--;
+        ArrayAreas->tamanho--;
         free(temp);
     }
 }

@@ -22,6 +22,7 @@
 #define MAX 50
 
 #define FICHEIRO_AREAS "areas.txt"
+#define FICHEIRO_ANIMAIS_BINARIO "animais.bin"
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,36 +45,32 @@ extern "C" {
         struct ANIMAIS_t *prox;
     } ANIMAIS;
 
-    struct BlocoMemoria {
+    struct AreasHelper {
         int tamanho;
         AREA * areas;
     };
 
-    struct BlocoMemoria bm;
-
     struct AnimaisHelper {
-        int conta_id;
         int tamanho;
-        ANIMAIS * animais_inicio;
-        ANIMAIS * animais_atual;
+        ANIMAIS * head;
+        ANIMAIS * atual;
     };
 
-    struct AnimaisHelper ah;
-
     int contaLinhas(char *nome);
-    bool iniciarVetor(struct BlocoMemoria * bm);
-    bool gravarFicheiroAreas(struct BlocoMemoria * bm);
+    bool iniciarVetor(struct AreasHelper * ArrayAreas);
+    bool gravarFicheiroAreas(struct AreasHelper * ArrayAreas);
 
-    AREA* procurarAreaNome(struct BlocoMemoria * bm, char *nome);
+    AREA* procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome);
     void listarArea(AREA* areasInput);
-    void listarTodasAreas(struct BlocoMemoria * bm);
-    void criarNovaArea(struct BlocoMemoria * bm);
-    void eliminarArea(struct BlocoMemoria * bm);
+    void listarTodasAreas(struct AreasHelper * ArrayAreas);
+    void criarNovaArea(struct AreasHelper * ArrayAreas);
+    void eliminarArea(struct AreasHelper * ArrayAreas);
 
-    void init();
-    bool carregaAnimaisFicheiroTXT(char * nome);
-    void listarTodosAnimais();
-
+    bool carregaAnimaisFicheiroTXT(char * nome, struct AreasHelper * ArrayAreas, struct AnimaisHelper * ListaAnimais);
+    void listarTodosAnimais(struct AnimaisHelper * ListaAnimais);
+    bool guardarAnimaisBinario(struct AnimaisHelper * ListaAnimais);
+    bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * ArrayAreas);
+    
     void limparConsola();
     int apresentacaoMenu();
     void pausa();
