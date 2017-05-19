@@ -6,13 +6,7 @@
 #include "util.h"
 
 void limparConsola() {
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-    system("clear");
-#endif
-
-#if defined(_WIN32) || defined(_WIN64)
     system("cls");
-#endif
 }
 
 int apresentacaoMenu() {
@@ -26,13 +20,16 @@ int apresentacaoMenu() {
         printf("  (4) Listar todas as areas.\n");
         printf("-> Menu animais\n");
         printf("  (5) Carregar animais ficheiro txt.\n");
-        printf("  (6) Eliminar area.\n");
-        printf("  (7) Listar uma area.\n");
-        printf("  (8) Listar todos os animais.\n");
+        printf("    -> Listagem de animais.\n");
+        printf("        (6) Listar por especie.\n");
+        printf("        (7) Listar por area.\n");
+        printf("        (8) Listar completa.\n");
+        printf("  (9) Transferir animal.\n");
+        printf("  (10) Listar uma area.\n");
         printf("(0) Sair.\n");
         printf("Sua opcao: ");
         scanf("%d", &op);
-    } while (op < 0 || op > 8);
+    } while (op < 0 || op > 13);
     return op;
 }
 

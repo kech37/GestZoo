@@ -15,6 +15,7 @@ AREA* procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome) {
     return NULL;
 }
 
+
 void listarArea(AREA* areasInput) {
     if (areasInput != NULL) {
         printf("%s %d %d", areasInput->id, areasInput->capacidade, areasInput->nrAreasAdj);
@@ -80,7 +81,7 @@ void criarNovaArea(struct AreasHelper * ArrayAreas) {
                     strcpy(ArrayAreas->areas[op - 1].areasAdj[ArrayAreas->areas[op - 1].nrAreasAdj], ArrayAreas->areas[ArrayAreas->tamanho - 1].id);
                     ArrayAreas->areas[op - 1].nrAreasAdj++;
                     printf("Area %s adiciona.\n", ArrayAreas->areas[op - 1].id);
-                }else{
+                } else {
                     printf("[ERRO] Essa area ja e adjacente!\n");
                 }
             } else {
@@ -92,8 +93,7 @@ void criarNovaArea(struct AreasHelper * ArrayAreas) {
     } while (op != 0 && ArrayAreas->areas[ArrayAreas->tamanho - 1].nrAreasAdj < 3);
 }
 
-void eliminarArea(struct AreasHelper * ArrayAreas) {
-    //TODO VERIFICAR SE A AREA TEM ANIMAIS, ANTES DE ELIMINAR
+bool eliminarArea(struct AreasHelper * ArrayAreas, struct AnimaisHelper * ListaAnimais) {
     int op;
     for (int i = 1; i <= ArrayAreas->tamanho; i++) {
         printf("%d - %s\n", i, ArrayAreas->areas[i - 1].id);
@@ -107,32 +107,38 @@ void eliminarArea(struct AreasHelper * ArrayAreas) {
         }
     } while (op < 0 || op > ArrayAreas->tamanho);
     if (op != 0) {
-        AREA *temp = malloc(sizeof (AREA) * ArrayAreas->tamanho);
-        for (int i = 0; i < ArrayAreas->tamanho; i++) {
-            strcpy(temp[i].id, ArrayAreas->areas[i].id);
-            temp[i].capacidade = ArrayAreas->areas[i].capacidade;
-            temp[i].nrAreasAdj = ArrayAreas->areas[i].nrAreasAdj;
-            for (int j = 0; j < ArrayAreas->areas[i].nrAreasAdj; j++) {
-                strcpy(temp[i].areasAdj[j], ArrayAreas->areas[i].areasAdj[j]);
-            }
-        }
-        free(ArrayAreas->areas);
-        ArrayAreas->areas = malloc(sizeof (AREA) * ArrayAreas->tamanho - 1);
-        for (int i = 0, j = 0; i < ArrayAreas->tamanho; i++) {
-            if (i != (op - 1)) {
-                strcpy(ArrayAreas->areas[j].id, temp[i].id);
-                ArrayAreas->areas[j].capacidade = temp[i].capacidade;
-                ArrayAreas->areas[j].nrAreasAdj = 0;
-                for (int k = 0; k < temp[i].nrAreasAdj; k++) {
-                    if (strcmp(temp[i].areasAdj[k], temp[op - 1].id)) {
-                        strcpy(ArrayAreas->areas[j].areasAdj[ArrayAreas->areas[j].nrAreasAdj], temp[i].areasAdj[k]);
-                        ArrayAreas->areas[j].nrAreasAdj++;
-                    }
+        if (!checkAnimalinArea(ListaAnimais, ArrayAreas->areas[op - 1].id)) {
+            AREA *temp = malloc(sizeof (AREA) * ArrayAreas->tamanho);
+            for (int i = 0; i < ArrayAreas->tamanho; i++) {
+                strcpy(temp[i].id, ArrayAreas->areas[i].id);
+                temp[i].capacidade = ArrayAreas->areas[i].capacidade;
+                temp[i].nrAreasAdj = ArrayAreas->areas[i].nrAreasAdj;
+                for (int j = 0; j < ArrayAreas->areas[i].nrAreasAdj; j++) {
+                    strcpy(temp[i].areasAdj[j], ArrayAreas->areas[i].areasAdj[j]);
                 }
-                j++;
             }
+            free(ArrayAreas->areas);
+            ArrayAreas->areas = malloc(sizeof (AREA) * ArrayAreas->tamanho - 1);
+            for (int i = 0, j = 0; i < ArrayAreas->tamanho; i++) {
+                if (i != (op - 1)) {
+                    strcpy(ArrayAreas->areas[j].id, temp[i].id);
+                    ArrayAreas->areas[j].capacidade = temp[i].capacidade;
+                    ArrayAreas->areas[j].nrAreasAdj = 0;
+                    for (int k = 0; k < temp[i].nrAreasAdj; k++) {
+                        if (strcmp(temp[i].areasAdj[k], temp[op - 1].id)) {
+                            strcpy(ArrayAreas->areas[j].areasAdj[ArrayAreas->areas[j].nrAreasAdj], temp[i].areasAdj[k]);
+                            ArrayAreas->areas[j].nrAreasAdj++;
+                        }
+                    }
+                    j++;
+                }
+            }
+            ArrayAreas->tamanho--;
+            free(temp);
+            return true;
+        } else {
+            printf("[ERRO] Esta area encontra-se com animais, mova-os primeiro antes de eliminar a area!\n");
         }
-        ArrayAreas->tamanho--;
-        free(temp);
     }
+    return false;
 }

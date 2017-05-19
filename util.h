@@ -50,8 +50,15 @@ extern "C" {
         AREA * areas;
     };
 
+    struct AnimaisIDGiver {
+        char especie[MAX];
+        int idEspecie;
+    };
+
     struct AnimaisHelper {
         int tamanho;
+        struct AnimaisIDGiver *idGiver;
+        int tamanho_id;
         ANIMAIS * head;
         ANIMAIS * atual;
     };
@@ -62,15 +69,19 @@ extern "C" {
 
     AREA* procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome);
     void listarArea(AREA* areasInput);
+    void listarTodosAnimaisPorArea(struct AnimaisHelper * ListaAnimais, char nomeArea[]);
+    void listarTodosAnimaisPorEspecie(struct AnimaisHelper * ListaAnimais, char nomeEspecie[]);
     void listarTodasAreas(struct AreasHelper * ArrayAreas);
+    ANIMAIS * getAnimalByIDandEspecie(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais);
     void criarNovaArea(struct AreasHelper * ArrayAreas);
-    void eliminarArea(struct AreasHelper * ArrayAreas);
+    bool eliminarArea(struct AreasHelper * ArrayAreas, struct AnimaisHelper * ListaAnimais);
 
     bool carregaAnimaisFicheiroTXT(char * nome, struct AreasHelper * ArrayAreas, struct AnimaisHelper * ListaAnimais);
     void listarTodosAnimais(struct AnimaisHelper * ListaAnimais);
     bool guardarAnimaisBinario(struct AnimaisHelper * ListaAnimais);
     bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * ArrayAreas);
-    
+    bool checkAnimalinArea(struct AnimaisHelper * ListaAnimais, char area[]);
+
     void limparConsola();
     int apresentacaoMenu();
     void pausa();
