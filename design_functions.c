@@ -25,7 +25,7 @@ int apresentacaoMenu() {
         printf("        (7) Listar por area.\n");
         printf("        (8) Listar completa.\n");
         printf("  (9) Transferir animal.\n");
-        printf("  (10) Listar uma area.\n");
+        printf("  (10) Procriacao de animais.\n");
         printf("(0) Sair.\n");
         printf("Sua opcao: ");
         scanf("%d", &op);

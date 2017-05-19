@@ -8,6 +8,22 @@
 
 #define NOME_FICHEIRO_ANIMAIS "animais.bin"
 
+bool verificaCapacidadeArea(struct AnimaisHelper * ListaAnimais, AREA * area, int peso_adicionar) {
+    int total = 0;
+    ANIMAIS * temp = ListaAnimais->head;
+    while (temp != NULL) {
+        if (!strcmp(temp->area->id, area->id)) {
+            total += temp->peso;
+        }
+        temp = temp->prox;
+    }
+    if ((total + peso_adicionar) > area->capacidade) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 int animalIDGiver(struct AnimaisHelper * ListaAnimais, char nomeEspecie[]) {
     if (ListaAnimais->tamanho_id == 0) {
         ListaAnimais->idGiver = malloc(sizeof (struct AnimaisIDGiver));
@@ -72,7 +88,6 @@ bool AdicionaAnimal(struct AnimaisHelper * ListaAnimais, ANIMAIS animal) {
 
         ListaAnimais->atual->prox = temp;
         ListaAnimais->atual = temp;
-
         return true;
     }
 }
@@ -113,10 +128,10 @@ void listarTodosAnimais(struct AnimaisHelper * ListaAnimais) {
     }
 }
 
-ANIMAIS * getAnimalByIDandEspecie(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais){
+ANIMAIS * getAnimalByIDandEspecie(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais) {
     ListaAnimais->atual = ListaAnimais->head;
-    while(ListaAnimais->atual != NULL){
-        if(ListaAnimais->atual->nrSerie == nrSerie && !strcmp(ListaAnimais->atual->especie, especie)){
+    while (ListaAnimais->atual != NULL) {
+        if (ListaAnimais->atual->nrSerie == nrSerie && !strcmp(ListaAnimais->atual->especie, especie)) {
             return ListaAnimais->atual;
         }
         ListaAnimais->atual = ListaAnimais->atual->prox;
@@ -178,6 +193,8 @@ bool carregaAnimaisFicheiroTXT(char * nome, struct AreasHelper * ArrayAreas, str
                 temp.area = procurarAreaNome(ArrayAreas, aux);
                 if (temp.area == NULL) {
                     printf("[ERRO] Area do animal %s, nao encontra.\n", temp.nome);
+                } else if (!verificaCapacidadeArea(ListaAnimais, temp.area, temp.peso)) {
+                    printf("[ERRO] Area %s nao tem capacidade suficiente!\n       Anima %s ignorado.\n", temp.area->id, temp.nome);
                 } else {
                     temp.filho = NULL;
                     AdicionaAnimal(ListaAnimais, temp);
@@ -229,6 +246,8 @@ bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * 
             temp.area = procurarAreaNome(ArrayAreas, aux);
             if (temp.area == NULL) {
                 printf("[ERRO] Area do animal %s, nao encontra.\n", temp.nome);
+            } else if (!verificaCapacidadeArea(ListaAnimais, temp.area, temp.peso)) {
+                printf("[ERRO] Area %s nao tem capacidade suficiente!\n       Anima %s ignorado.\n", temp.area->id, temp.nome);
             } else {
                 fread(&temp.especie, sizeof (char), MAX, f);
                 //            fwrite(ListaAnimais->atual->filho->especie, sizeof(char), MAX, f);

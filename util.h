@@ -81,6 +81,7 @@ extern "C" {
     bool guardarAnimaisBinario(struct AnimaisHelper * ListaAnimais);
     bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * ArrayAreas);
     bool checkAnimalinArea(struct AnimaisHelper * ListaAnimais, char area[]);
+    bool verificaCapacidadeArea(struct AnimaisHelper * ListaAnimais, AREA * area, int peso_adicionar);
 
     void limparConsola();
     int apresentacaoMenu();

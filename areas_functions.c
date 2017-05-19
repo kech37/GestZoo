@@ -6,7 +6,7 @@
 
 #include "util.h"
 
-AREA* procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome) {
+AREA * procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome) {
     for (int i = 0; i < ArrayAreas->tamanho; i++) {
         if (!strcmp(ArrayAreas->areas[i].id, nome)) {
             return &ArrayAreas->areas[i];
@@ -14,7 +14,6 @@ AREA* procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome) {
     }
     return NULL;
 }
-
 
 void listarArea(AREA* areasInput) {
     if (areasInput != NULL) {

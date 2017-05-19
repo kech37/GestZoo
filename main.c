@@ -69,8 +69,8 @@ int main(int argc, char** argv) {
                     printf("<--- (5) Carregar animais por ficheiro texto --->\n");
                     if (carregaAnimaisFicheiroTXT("animais.txt", &ArrayAreas, &ListaAnimais)) {
                         printf("Animais carregados com sucesso!\n");
-                        pausa();
                     }
+                    pausa();
                     break;
                 case 6:
                     printf("<--- (6) Listagem por especie de animais --->\n");
@@ -145,7 +145,11 @@ int main(int argc, char** argv) {
                                 printf("Escolha o ID da area para que deseja transferir o animal:\n");
                                 scanf("%d", &aux);
                                 if (aux >= 0 && aux < limite_superior) {
-                                    temp->area = procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]);
+                                    if (verificaCapacidadeArea(&ListaAnimais, procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]), temp->peso)) {
+                                        temp->area = procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]);
+                                    } else {
+                                        printf("[ERRO] Nao e possivel realizar a transferencia!\n       A area nao tem capacidade para este anima.\n");
+                                    }
                                 } else {
                                     printf("[ERRO] Opcao invalida!\n");
                                 }
@@ -157,6 +161,9 @@ int main(int argc, char** argv) {
                         printf("[ERRO] Opcao invalida!\n");
                     }
                     pausa();
+                    break;
+                case 10:
+
                     break;
             }
         } while (op > 0 && op < 14);
