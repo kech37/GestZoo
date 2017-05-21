@@ -135,20 +135,38 @@ int main(int argc, char** argv) {
                         printf("Escolha o ID do animal que quer ver as informacoes completas:\n");
                         scanf("%d", &aux);
                         if (aux >= 0 && aux < conta) {
+                            int familia = 0;
                             printf("\n");
                             conta = 0;
                             ANIMAIS * temp = getAnimalByIDandEspecie(aux, aux_char, &ListaAnimais);
                             if (temp != NULL) {
-                                printf("Animal escolhido:\n");
-                                printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n    Peso: %d\n    Area: %s\n", temp->nome, temp->nrSerie, temp->especie, temp->peso, temp->area->id);
+                                limparConsola();
                                 if (temp->parente1 != NULL || temp->parente2 != NULL) {
-                                    printf("Parentes:\n");
                                     if (temp->parente1 != NULL) {
-                                        printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n", temp->parente1->nome, temp->parente1->nrSerie, temp->parente1->especie);
+                                        familia++;
+                                        printf("Ascendencia #%d:\nNome: %s\n    nrSerie / Especie: %d / %s\n", familia, temp->parente1->nome, temp->parente1->nrSerie, temp->parente1->especie);
                                     }
                                     if (temp->parente2 != NULL) {
-                                        printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n", temp->parente2->nome, temp->parente2->nrSerie, temp->parente2->especie);
+                                        familia++;
+                                        printf("Ascendencia #%d\nNome: %s\n    nrSerie / Especie: %d / %s\n", familia, temp->parente2->nome, temp->parente2->nrSerie, temp->parente2->especie);
                                     }
+                                }
+                                if (familia == 0) {
+                                    printf("<Sem ascendencia>\n");
+                                }
+                                familia = 0;
+                                printf("\nAnimal escolhido:\n");
+                                printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n    Peso: %d\n    Area: %s\n\n", temp->nome, temp->nrSerie, temp->especie, temp->peso, temp->area->id);
+                                ListaAnimais.atual = ListaAnimais.head;
+                                while (ListaAnimais.atual != NULL) {
+                                    if ((ListaAnimais.atual->parente1 != NULL && ListaAnimais.atual->parente1->nrSerie == temp->nrSerie && !strcmp(ListaAnimais.atual->parente1->especie, temp->especie)) || (ListaAnimais.atual->parente2 != NULL && ListaAnimais.atual->parente2->nrSerie == temp->nrSerie && !strcmp(ListaAnimais.atual->parente2->especie, temp->especie))) {
+                                        familia++;
+                                        printf("Descendente #%d:\n Nome: %s\n    nrSerie / Especie: %d / %s\n", familia, ListaAnimais.atual->nome, ListaAnimais.atual->nrSerie, ListaAnimais.atual->especie);
+                                    }
+                                    ListaAnimais.atual = ListaAnimais.atual->prox;
+                                }
+                                if (familia == 0) {
+                                    printf("<Sem descendentes>\n");
                                 }
                             } else {
                                 printf("[ERRO] Animal nao existe!\n");
