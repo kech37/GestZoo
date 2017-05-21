@@ -14,7 +14,7 @@
 #include "util.h"
 
 int main(int argc, char** argv) {
-    int op, aux, limite_superior = 0;
+    int op, aux, conta = 0;
     char aux_char[MAX];
     struct AreasHelper ArrayAreas;
     struct AnimaisHelper ListaAnimais;
@@ -112,7 +112,53 @@ int main(int argc, char** argv) {
                     pausa();
                     break;
                 case 9:
-                    printf("<--- (9) Transferir animal --->\n");
+                    printf("<--- (9) Listagem informacao completa de um animal --->\n");
+                    for (int i = 0; i < ListaAnimais.tamanho_id; i++) {
+                        printf("%d - %s\n", i + 1, ListaAnimais.idGiver[i].especie);
+                    }
+                    printf("0 - Para cancelar\n");
+                    printf("Escolha uma especie:\n");
+                    scanf("%d", &aux);
+                    aux--;
+                    if (aux >= 0 && aux < ListaAnimais.tamanho_id) {
+                        strcpy(aux_char, ListaAnimais.idGiver[aux].especie);
+                        printf("\n");
+                        conta = 0;
+                        ListaAnimais.atual = ListaAnimais.head;
+                        while (ListaAnimais.atual != NULL) {
+                            if (!strcmp(ListaAnimais.atual->especie, aux_char)) {
+                                printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
+                                conta++;
+                            }
+                            ListaAnimais.atual = ListaAnimais.atual->prox;
+                        }
+                        printf("Escolha o ID do animal que quer ver as informacoes completas:\n");
+                        scanf("%d", &aux);
+                        if (aux >= 0 && aux < conta) {
+                            printf("\n");
+                            conta = 0;
+                            ANIMAIS * temp = getAnimalByIDandEspecie(aux, aux_char, &ListaAnimais);
+                            if (temp != NULL) {
+                                printf("Animal escolhido:\n");
+                                printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n    Peso: %d\n    Area: %s\n", temp->nome, temp->nrSerie, temp->especie, temp->peso, temp->area->id);
+                                if (temp->parente1 != NULL || temp->parente2 != NULL) {
+                                    printf("Parentes:\n");
+                                    if (temp->parente1 != NULL) {
+                                        printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n", temp->parente1->nome, temp->parente1->nrSerie, temp->parente1->especie);
+                                    }
+                                    if (temp->parente2 != NULL) {
+                                        printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n", temp->parente2->nome, temp->parente2->nrSerie, temp->parente2->especie);
+                                    }
+                                }
+                            } else {
+                                printf("[ERRO] Animal nao existe!\n");
+                            }
+                        }
+                    }
+                    pausa();
+                    break;
+                case 10:
+                    printf("<--- (10) Transferir animal --->\n");
                     for (int i = 0; i < ListaAnimais.tamanho_id; i++) {
                         printf("%d - %s\n", i + 1, ListaAnimais.idGiver[i].especie);
                     }
@@ -123,28 +169,29 @@ int main(int argc, char** argv) {
                     if (aux >= 0 && aux < ListaAnimais.tamanho_id) {
                         strcpy(aux_char, ListaAnimais.idGiver[aux].especie);
                         printf("\n");
+                        conta = 0;
                         ListaAnimais.atual = ListaAnimais.head;
                         while (ListaAnimais.atual != NULL) {
                             if (!strcmp(ListaAnimais.atual->especie, aux_char)) {
                                 printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
-                                limite_superior++;
+                                conta++;
                             }
                             ListaAnimais.atual = ListaAnimais.atual->prox;
                         }
                         printf("Escolha o ID do animal que quer transferir:\n");
                         scanf("%d", &aux);
-                        if (aux >= 0 && aux < limite_superior) {
+                        if (aux >= 0 && aux < conta) {
                             printf("\n");
-                            limite_superior = 0;
+                            conta = 0;
                             ANIMAIS * temp = getAnimalByIDandEspecie(aux, aux_char, &ListaAnimais);
                             if (temp != NULL) {
                                 for (int i = 0; i < temp->area->nrAreasAdj; i++) {
                                     printf("%d - %s\n", i, temp->area->areasAdj[i]);
-                                    limite_superior++;
+                                    conta++;
                                 }
                                 printf("Escolha o ID da area para que deseja transferir o animal:\n");
                                 scanf("%d", &aux);
-                                if (aux >= 0 && aux < limite_superior) {
+                                if (aux >= 0 && aux < conta) {
                                     if (verificaCapacidadeArea(&ListaAnimais, procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]), temp->peso)) {
                                         temp->area = procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]);
                                     } else {
@@ -153,6 +200,8 @@ int main(int argc, char** argv) {
                                 } else {
                                     printf("[ERRO] Opcao invalida!\n");
                                 }
+                            } else {
+                                printf("[ERRO] Animal nao existe!\n");
                             }
                         } else {
                             printf("[ERRO] Opcao invalida!\n");
@@ -162,7 +211,85 @@ int main(int argc, char** argv) {
                     }
                     pausa();
                     break;
-                case 10:
+                case 11:
+                    printf("<--- (11) Procriacao de animais --->\n");
+                    for (int i = 0; i < ListaAnimais.tamanho_id; i++) {
+                        printf("%d - %s\n", i + 1, ListaAnimais.idGiver[i].especie);
+                    }
+                    printf("0 - Para cancelar\n");
+                    printf("Escolha a especie do animal que procriar:\n");
+                    scanf("%d", &aux);
+                    aux--;
+                    if (aux >= 0 && aux < ListaAnimais.tamanho_id) {
+                        conta = 0;
+                        ListaAnimais.atual = ListaAnimais.head;
+                        while (ListaAnimais.atual != NULL) {
+                            if (!strcmp(ListaAnimais.atual->especie, ListaAnimais.idGiver[aux].especie)) {
+                                conta++;
+                            }
+                            ListaAnimais.atual = ListaAnimais.atual->prox;
+                        }
+                        if (conta >= 2) {
+                            ANIMAIS * temp_parente1, * temp_parente2;
+                            ANIMAIS temp_filho;
+                            strcpy(temp_filho.especie, ListaAnimais.idGiver[aux].especie);
+                            printf("\n");
+                            ListaAnimais.atual = ListaAnimais.head;
+                            while (ListaAnimais.atual != NULL) {
+                                if (!strcmp(ListaAnimais.atual->especie, temp_filho.especie)) {
+                                    printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
+                                }
+                                ListaAnimais.atual = ListaAnimais.atual->prox;
+                            }
+                            printf("Escolha o ID do animal que sera o parente 1:\n");
+                            scanf("%d", &aux);
+                            temp_parente1 = getAnimalByIDandEspecie(aux, temp_filho.especie, &ListaAnimais);
+                            if (temp_parente1 != NULL) {
+                                printf("\n");
+                                ListaAnimais.atual = ListaAnimais.head;
+                                while (ListaAnimais.atual != NULL) {
+                                    if (!strcmp(ListaAnimais.atual->especie, temp_filho.especie) && ListaAnimais.atual->nrSerie != temp_parente1->nrSerie) {
+                                        printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
+                                    }
+                                    ListaAnimais.atual = ListaAnimais.atual->prox;
+                                }
+                                printf("Escolha o ID do animal que sera o parente 2:\n");
+                                scanf("%d", &aux);
+                                temp_parente2 = getAnimalByIDandEspecie(aux, temp_filho.especie, &ListaAnimais);
+                                if (temp_parente2 != NULL) {
+                                    temp_filho.peso = temp_parente1->peso * 0.20 + temp_parente2->peso * 0.20;
+                                    for (int i = 0; i < ArrayAreas.tamanho; i++) {
+                                        if (verificaCapacidadeArea(&ListaAnimais, &ArrayAreas.areas[i], temp_filho.peso)) {
+                                            printf("%d - %s\n", i, ArrayAreas.areas[i].id);
+                                        }
+                                    }
+                                    printf("Escolhe a area que desejas transferir o animal: \n(se faltar areas, e porque estas nao tem capacidade para o novo animal)\n");
+                                    scanf("%d", &aux);
+                                    if (aux >= 0 && aux < ArrayAreas.tamanho) {
+                                        temp_filho.area = &ArrayAreas.areas[aux];
+                                        printf("Indique o nome do novo animal:");
+                                        scanf("%s", temp_filho.nome);
+                                        temp_filho.parente1 = temp_parente1;
+                                        temp_filho.parente2 = temp_parente2;
+                                        if (AdicionaAnimal(&ListaAnimais, temp_filho)) {
+                                            printf("[LOG] Animal procriado com sucesso!\n");
+                                        } else {
+                                            printf("[ERRO] Ocorreu um erro na procriacao do animal.\n");
+                                        }
+                                    } else if (aux != -1) {
+                                        printf("[ERRO] Opcao invalida, area inexistente!\n");
+                                    }
+                                } else {
+                                    printf("[ERRO] Nao foi encontrado esse animal parente 2!\n");
+                                }
+                            } else {
+                                printf("[ERRO] Nao foi encontrado esse animal parente 1!\n");
+                            }
+                        } else {
+                            printf("[ERRO] Nao ha animais suficientes para procriar!\n");
+                        }
+                    }
+                    pausa();
 
                     break;
             }

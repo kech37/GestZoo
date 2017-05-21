@@ -53,7 +53,8 @@ bool criaLista(struct AnimaisHelper * ListaAnimais, ANIMAIS animal) {
         return false;
     }
     temp->area = animal.area;
-    temp->filho = animal.filho;
+    temp->parente1 = animal.parente1;
+    temp->parente2 = animal.parente2;
     temp->nrSerie = animalIDGiver(ListaAnimais, animal.especie);
     temp->peso = animal.peso;
     strcpy(temp->especie, animal.especie);
@@ -77,7 +78,8 @@ bool AdicionaAnimal(struct AnimaisHelper * ListaAnimais, ANIMAIS animal) {
             return false;
         }
         temp->area = animal.area;
-        temp->filho = animal.filho;
+        temp->parente1 = animal.parente1;
+        temp->parente2 = animal.parente2;
         temp->nrSerie = animalIDGiver(ListaAnimais, animal.especie);
         temp->peso = animal.peso;
         strcpy(temp->especie, animal.especie);
@@ -94,7 +96,7 @@ bool AdicionaAnimal(struct AnimaisHelper * ListaAnimais, ANIMAIS animal) {
 
 void listaAnimal(ANIMAIS * animal) {
     if (animal != NULL) {
-        printf("%s (%d) %s %d %s\n", animal->especie, animal->nrSerie, animal->nome, animal->peso, animal->area->id);
+        printf("%3d\t%20s\t%10s\t%5d\t%10s\n", animal->nrSerie, animal->nome, animal->especie, animal->peso, animal->area->id);
     } else {
         printf("Ponteiro ANIMAIS NULL.\n");
     }
@@ -196,7 +198,8 @@ bool carregaAnimaisFicheiroTXT(char * nome, struct AreasHelper * ArrayAreas, str
                 } else if (!verificaCapacidadeArea(ListaAnimais, temp.area, temp.peso)) {
                     printf("[ERRO] Area %s nao tem capacidade suficiente!\n       Anima %s ignorado.\n", temp.area->id, temp.nome);
                 } else {
-                    temp.filho = NULL;
+                    temp.parente1 = NULL;
+                    temp.parente2 = NULL;
                     AdicionaAnimal(ListaAnimais, temp);
                 }
             }
@@ -214,16 +217,25 @@ bool carregaAnimaisFicheiroTXT(char * nome, struct AreasHelper * ArrayAreas, str
 
 bool guardarAnimaisBinario(struct AnimaisHelper * ListaAnimais) {
     FILE *f = fopen(FICHEIRO_ANIMAIS_BINARIO, "wb");
+    int aux = -1;
     if (f != NULL) {
         ListaAnimais->atual = ListaAnimais->head;
         fwrite(&ListaAnimais->tamanho, sizeof (int), 1, f);
         while (ListaAnimais->atual != NULL) {
             fwrite(&ListaAnimais->atual->area->id, sizeof (char), MAX, f);
-            fwrite(&ListaAnimais->atual->especie, sizeof (char), MAX, f);
-            //            fwrite(&ListaAnimais->atual->filho->especie, sizeof(char), MAX, f);
-            //            fwrite(&ListaAnimais->atual->filho->nrSerie, sizeof(int), 1, f);
-            fwrite(&ListaAnimais->atual->nome, sizeof (char), MAX, f);
             fwrite(&ListaAnimais->atual->peso, sizeof (int), 1, f);
+            fwrite(&ListaAnimais->atual->especie, sizeof (char), MAX, f);
+            if (ListaAnimais->atual->parente1 == NULL) {
+                fwrite(&aux, sizeof (int), 1, f);
+            } else {
+                fwrite(&ListaAnimais->atual->parente1->nrSerie, sizeof (int), 1, f);
+            }
+            if (ListaAnimais->atual->parente2 == NULL) {
+                fwrite(&aux, sizeof (int), 1, f);
+            } else {
+                fwrite(&ListaAnimais->atual->parente2->nrSerie, sizeof (int), 1, f);
+            }
+            fwrite(&ListaAnimais->atual->nome, sizeof (char), MAX, f);
             ListaAnimais->atual = ListaAnimais->atual->prox;
         }
         fclose(f);
@@ -237,7 +249,7 @@ bool guardarAnimaisBinario(struct AnimaisHelper * ListaAnimais) {
 bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * ArrayAreas) {
     FILE * f = fopen(FICHEIRO_ANIMAIS_BINARIO, "rb");
     if (f != NULL) {
-        int quantos;
+        int quantos, aux_id;
         ANIMAIS temp;
         char aux[MAX];
         fread(&quantos, sizeof (int), 1, f);
@@ -246,16 +258,27 @@ bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * 
             temp.area = procurarAreaNome(ArrayAreas, aux);
             if (temp.area == NULL) {
                 printf("[ERRO] Area do animal %s, nao encontra.\n", temp.nome);
-            } else if (!verificaCapacidadeArea(ListaAnimais, temp.area, temp.peso)) {
-                printf("[ERRO] Area %s nao tem capacidade suficiente!\n       Anima %s ignorado.\n", temp.area->id, temp.nome);
             } else {
-                fread(&temp.especie, sizeof (char), MAX, f);
-                //            fwrite(ListaAnimais->atual->filho->especie, sizeof(char), MAX, f);
-                //            fwrite(ListaAnimais->atual->filho->nrSerie, sizeof(int), 1, f);
-                fread(&temp.nome, sizeof (char), MAX, f);
                 fread(&temp.peso, sizeof (int), 1, f);
-                temp.filho = NULL;
-                AdicionaAnimal(ListaAnimais, temp);
+                if (!verificaCapacidadeArea(ListaAnimais, temp.area, temp.peso)) {
+                    printf("[ERRO] Area %s nao tem capacidade suficiente!\n       Anima %s ignorado.\n", temp.area->id, temp.nome);
+                } else {
+                    fread(&temp.especie, sizeof (char), MAX, f);
+                    fread(&aux_id, sizeof (int), 1, f);
+                    if (aux_id != -1) {
+                        temp.parente1 = getAnimalByIDandEspecie(aux_id, temp.especie, ListaAnimais);
+                    } else {
+                        temp.parente1 = NULL;
+                    }
+                    fread(&aux_id, sizeof (int), 1, f);
+                    if (aux_id != -1) {
+                        temp.parente2 = getAnimalByIDandEspecie(aux_id, temp.especie, ListaAnimais);
+                    } else {
+                        temp.parente2 = NULL;
+                    }
+                    fread(&temp.nome, sizeof (char), MAX, f);
+                    AdicionaAnimal(ListaAnimais, temp);
+                }
             }
         }
         fclose(f);

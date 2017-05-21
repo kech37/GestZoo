@@ -41,7 +41,8 @@ extern "C" {
         char nome[MAX];
         int peso;
         AREA * area;
-        struct ANIMAIS_t *filho;
+        struct ANIMAIS_t *parente1;
+        struct ANIMAIS_t *parente2;
         struct ANIMAIS_t *prox;
     } ANIMAIS;
 
@@ -82,6 +83,7 @@ extern "C" {
     bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * ArrayAreas);
     bool checkAnimalinArea(struct AnimaisHelper * ListaAnimais, char area[]);
     bool verificaCapacidadeArea(struct AnimaisHelper * ListaAnimais, AREA * area, int peso_adicionar);
+    bool AdicionaAnimal(struct AnimaisHelper * ListaAnimais, ANIMAIS animal) ;
 
     void limparConsola();
     int apresentacaoMenu();

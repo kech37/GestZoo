@@ -17,9 +17,9 @@ AREA * procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome) {
 
 void listarArea(AREA* areasInput) {
     if (areasInput != NULL) {
-        printf("%s %d %d", areasInput->id, areasInput->capacidade, areasInput->nrAreasAdj);
+        printf("%10s\t%5d\t%5d", areasInput->id, areasInput->capacidade, areasInput->nrAreasAdj);
         for (int j = 0; j < areasInput->nrAreasAdj; j++) {
-            printf(" %s", areasInput->areasAdj[j]);
+            printf("\t%10s", areasInput->areasAdj[j]);
         }
         printf("\n");
     } else {
