@@ -62,8 +62,8 @@ int verificaAdjacentes(AREA *a, char *nome) {
 void criarNovaArea(struct AreasHelper * ArrayAreas) {
     char id[50];
     int flag = 0, op;
-    ArrayAreas->areas = realloc(ArrayAreas->areas, sizeof (AREA) * ArrayAreas->tamanho + 1);
     ArrayAreas->tamanho++;
+    ArrayAreas->areas = realloc(ArrayAreas->areas, sizeof (AREA) * ArrayAreas->tamanho);
     printf("Indique o ID da nova area: ");
     do {
         scanf("%49s", id);

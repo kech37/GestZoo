@@ -198,20 +198,29 @@ int main(int argc, char** argv) {
                             ANIMAIS * temp = getAnimalByIDandEspecie(aux, aux_char, &ListaAnimais);
                             if (temp != NULL) {
                                 for (int i = 0; i < temp->area->nrAreasAdj; i++) {
-                                    printf("%d - %s\n", i, temp->area->areasAdj[i]);
-                                    conta++;
-                                }
-                                printf("Escolha o ID da area para que deseja transferir o animal:\n");
-                                scanf("%d", &aux);
-                                if (aux >= 0 && aux < conta) {
-                                    if (verificaCapacidadeArea(&ListaAnimais, procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]), temp->peso)) {
-                                        temp->area = procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]);
-                                    } else {
-                                        printf("[ERRO] Nao e possivel realizar a transferencia!\n       A area nao tem capacidade para este anima.\n");
+                                    if (verificaCapacidadeArea(&ListaAnimais, procurarAreaNome(&ArrayAreas, temp->area->areasAdj[i]), temp->peso)) {
+                                        printf("%d - %s\n", i, temp->area->areasAdj[i]);
+                                        conta++;
                                     }
-                                } else {
-                                    printf("[ERRO] Opcao invalida!\n");
                                 }
+                                if (conta == 0) {
+                                    printf("[ERRO] Nao ha areas adjacentes com capacidade suficiente para o animal %s!\n", temp->nome);
+                                    pausa();
+                                    break;
+                                } else {
+                                    printf("Escolha o ID da area para que deseja transferir o animal:\n");
+                                    scanf("%d", &aux);
+                                    if (aux >= 0 && aux <= conta) {
+                                        if (verificaCapacidadeArea(&ListaAnimais, procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]), temp->peso)) {
+                                            temp->area = procurarAreaNome(&ArrayAreas, temp->area->areasAdj[aux]);
+                                        } else {
+                                            printf("[ERRO] Nao e possivel realizar a transferencia!\n       A area nao tem capacidade para este anima.\n");
+                                        }
+                                    } else {
+                                        printf("[ERRO] Opcao invalida!\n");
+                                    }
+                                }
+
                             } else {
                                 printf("[ERRO] Animal nao existe!\n");
                             }
@@ -324,7 +333,12 @@ int main(int argc, char** argv) {
                             }
                             ListaAnimais.atual = ListaAnimais.atual->prox;
                         }
-                        printf("Escolha o ID do animal que quer ver as informacoes completas:\n");
+                        if(conta == 0){
+                            printf("[ERRO] Nao ha animais desta especie para serem eliminados!\n.");
+                            pausa();
+                            break;
+                        }
+                        printf("Escolha o ID do animal que deseja eliminar:\n");
                         scanf("%d", &aux);
                         if (aux >= 0 && aux < conta) {
                             if (eliminaNodo(aux, aux_char, &ListaAnimais)) {

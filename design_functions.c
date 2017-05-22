@@ -12,7 +12,7 @@ void limparConsola() {
 }
 
 int apresentacaoMenu() {
-    int op = -1;
+    int op;
     do {
         limparConsola();
         printf("-> Menu areas\n");
@@ -33,10 +33,6 @@ int apresentacaoMenu() {
         printf("(0) Sair.\n");
         printf("Sua opcao: ");
         scanf("%d", &op);
-        if (!isdigit((op + '0'))) {
-            fflush(stdin);
-            op = -1;
-        }
     } while (op < 0 || op > 12);
     return op;
 }
