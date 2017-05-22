@@ -177,6 +177,16 @@ bool eliminaNodo(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimai
             ListaAnimais->head = eliminar->prox;
         }
     }
+    ListaAnimais->atual = ListaAnimais->head;
+    while (ListaAnimais->atual != NULL) {
+        if (ListaAnimais->atual->parente1 != NULL && ListaAnimais->atual->parente1->nrSerie == eliminar->nrSerie && !strcmp(ListaAnimais->atual->parente1->especie, eliminar->especie)) {
+            ListaAnimais->atual->parente1 = NULL;
+        }
+        if (ListaAnimais->atual->parente2 != NULL && ListaAnimais->atual->parente2->nrSerie == eliminar->nrSerie && !strcmp(ListaAnimais->atual->parente2->especie, eliminar->especie)) {
+            ListaAnimais->atual->parente2 = NULL;
+        }
+        ListaAnimais->atual = ListaAnimais->atual->prox;
+    }
     free(eliminar);
     ListaAnimais->tamanho--;
     eliminar = NULL;

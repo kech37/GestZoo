@@ -308,7 +308,39 @@ int main(int argc, char** argv) {
                         }
                     }
                     pausa();
-
+                    break;
+                case 12:
+                    printf("<--- (12) Eliminar animal --->\n");
+                    for (int i = 0; i < ListaAnimais.tamanho_id; i++) {
+                        printf("%d - %s\n", i + 1, ListaAnimais.idGiver[i].especie);
+                    }
+                    printf("0 - Para cancelar\n");
+                    printf("Escolha uma especie:\n");
+                    scanf("%d", &aux);
+                    aux--;
+                    if (aux >= 0 && aux < ListaAnimais.tamanho_id) {
+                        strcpy(aux_char, ListaAnimais.idGiver[aux].especie);
+                        printf("\n");
+                        conta = 0;
+                        ListaAnimais.atual = ListaAnimais.head;
+                        while (ListaAnimais.atual != NULL) {
+                            if (!strcmp(ListaAnimais.atual->especie, aux_char)) {
+                                printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
+                                conta++;
+                            }
+                            ListaAnimais.atual = ListaAnimais.atual->prox;
+                        }
+                        printf("Escolha o ID do animal que quer ver as informacoes completas:\n");
+                        scanf("%d", &aux);
+                        if (aux >= 0 && aux < conta) {
+                            if (eliminaNodo(aux, aux_char, &ListaAnimais)) {
+                                printf("[LOG] Animal eliminado com sucesso!\n");
+                            } else {
+                                printf("[ERRO] Ao elimnar o animal...\n");
+                            }
+                        }
+                    }
+                    pausa();
                     break;
             }
         } while (op > 0 && op < 14);
