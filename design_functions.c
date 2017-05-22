@@ -1,8 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ *     File:   design_functions.c
+ *    Aluno:   Carlos Filipe Sousa Pinho
+ * Nº Aluno:   21220528
+ *
  */
+
 #include "util.h"
 
 void limparConsola() {

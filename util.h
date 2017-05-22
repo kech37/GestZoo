@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
- * File:   util.h
- * Author: carlo
+ *      File:   util.h
+ *     Aluno:   Carlos Filipe Sousa Pinho
+ *  Nº Aluno:   21220528
  *
- * Created on 29 de Abril de 2017, 18:25
  */
 
 #ifndef UTIL_H
@@ -67,24 +61,24 @@ extern "C" {
     int contaLinhas(char *nome);
     bool iniciarVetor(struct AreasHelper * ArrayAreas);
     bool gravarFicheiroAreas(struct AreasHelper * ArrayAreas);
+    bool carregaAnimaisFicheiroTXT(char * nome, struct AreasHelper * ArrayAreas, struct AnimaisHelper * ListaAnimais);
+    bool guardarAnimaisBinario(struct AnimaisHelper * ListaAnimais);
+    bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * ArrayAreas);
 
     AREA* procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome);
     void listarArea(AREA* areasInput);
-    void listarTodosAnimaisPorArea(struct AnimaisHelper * ListaAnimais, char nomeArea[]);
-    void listarTodosAnimaisPorEspecie(struct AnimaisHelper * ListaAnimais, char nomeEspecie[]);
     void listarTodasAreas(struct AreasHelper * ArrayAreas);
-    ANIMAIS * getAnimalByIDandEspecie(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais);
     void criarNovaArea(struct AreasHelper * ArrayAreas);
     bool eliminarArea(struct AreasHelper * ArrayAreas, struct AnimaisHelper * ListaAnimais);
-    bool eliminaNodo(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais);
-
-    bool carregaAnimaisFicheiroTXT(char * nome, struct AreasHelper * ArrayAreas, struct AnimaisHelper * ListaAnimais);
-    void listarTodosAnimais(struct AnimaisHelper * ListaAnimais);
-    bool guardarAnimaisBinario(struct AnimaisHelper * ListaAnimais);
-    bool leAnimaisBinario(struct AnimaisHelper * ListaAnimais, struct AreasHelper * ArrayAreas);
-    bool checkAnimalinArea(struct AnimaisHelper * ListaAnimais, char area[]);
     bool verificaCapacidadeArea(struct AnimaisHelper * ListaAnimais, AREA * area, int peso_adicionar);
+
+    void listarTodosAnimais(struct AnimaisHelper * ListaAnimais);
+    void listarTodosAnimaisPorArea(struct AnimaisHelper * ListaAnimais, char nomeArea[]);
+    void listarTodosAnimaisPorEspecie(struct AnimaisHelper * ListaAnimais, char nomeEspecie[]);
+    bool checkAnimalinArea(struct AnimaisHelper * ListaAnimais, char area[]);
     bool AdicionaAnimal(struct AnimaisHelper * ListaAnimais, ANIMAIS animal);
+    ANIMAIS * getAnimalByIDandEspecie(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais);
+    bool eliminaNodo(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais);
 
     void limparConsola();
     int apresentacaoMenu();

@@ -1,10 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ *     File:   areas_functions.c
+ *    Aluno:   Carlos Filipe Sousa Pinho
+ * Nº Aluno:   21220528
+ *
  */
 
 #include "util.h"
+
+bool verificaCapacidadeArea(struct AnimaisHelper * ListaAnimais, AREA * area, int peso_adicionar) {
+    int total = 0;
+    ANIMAIS * temp = ListaAnimais->head;
+    while (temp != NULL) {
+        if (!strcmp(temp->area->id, area->id)) {
+            total += temp->peso;
+        }
+        temp = temp->prox;
+    }
+    if ((total + peso_adicionar) > area->capacidade) {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 AREA * procurarAreaNome(struct AreasHelper * ArrayAreas, char *nome) {
     for (int i = 0; i < ArrayAreas->tamanho; i++) {
