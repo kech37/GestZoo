@@ -8,7 +8,9 @@
 #include "util.h"
 
 void limparConsola() {
-    system("cls");
+    for(int i = 0; i < 45; i++){
+        printf("\n");
+    }
 }
 
 int apresentacaoMenu() {
@@ -38,6 +40,8 @@ int apresentacaoMenu() {
 }
 
 void pausa() {
-    printf("\n");
-    system("pause");
+    printf("\nPrima [QUALQUER TECLA] para continuar...");
+    getchar();
+    getchar();
+
 }

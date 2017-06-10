@@ -117,18 +117,16 @@ int main(int argc, char** argv) {
                     if (aux >= 0 && aux < ListaAnimais.tamanho_id) {
                         strcpy(aux_char, ListaAnimais.idGiver[aux].especie);
                         printf("\n");
-                        conta = 0;
-                        ListaAnimais.atual = ListaAnimais.head;
-                        while (ListaAnimais.atual != NULL) {
-                            if (!strcmp(ListaAnimais.atual->especie, aux_char)) {
-                                printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
-                                conta++;
+                        ANIMAIS * temp = ListaAnimais.head;
+                        while (temp != NULL) {
+                            if (!strcmp(temp->especie, aux_char)) {
+                                printf("%d - %s\n", temp->nrSerie, temp->nome);
                             }
-                            ListaAnimais.atual = ListaAnimais.atual->prox;
+                            temp = temp->prox;
                         }
                         printf("Escolha o ID do animal que quer ver as informacoes completas:\n");
                         scanf("%d", &aux);
-                        if (aux >= 0 && aux < conta) {
+                        if (aux >= 0) {
                             int familia = 0;
                             printf("\n");
                             conta = 0;
@@ -151,13 +149,13 @@ int main(int argc, char** argv) {
                                 familia = 0;
                                 printf("\nAnimal escolhido:\n");
                                 printf(" --> Nome: %s\n    nrSerie / Especie: %d / %s\n    Peso: %d\n    Area: %s\n\n", temp->nome, temp->nrSerie, temp->especie, temp->peso, temp->area->id);
-                                ListaAnimais.atual = ListaAnimais.head;
-                                while (ListaAnimais.atual != NULL) {
-                                    if ((ListaAnimais.atual->parente1 != NULL && ListaAnimais.atual->parente1->nrSerie == temp->nrSerie && !strcmp(ListaAnimais.atual->parente1->especie, temp->especie)) || (ListaAnimais.atual->parente2 != NULL && ListaAnimais.atual->parente2->nrSerie == temp->nrSerie && !strcmp(ListaAnimais.atual->parente2->especie, temp->especie))) {
+                                ANIMAIS * procura = ListaAnimais.head;
+                                while (procura != NULL) {
+                                    if ((procura->parente1 != NULL && procura->parente1->nrSerie == temp->nrSerie && !strcmp(procura->parente1->especie, temp->especie)) || (procura->parente2 != NULL && procura->parente2->nrSerie == temp->nrSerie && !strcmp(procura->parente2->especie, temp->especie))) {
                                         familia++;
-                                        printf("Descendente #%d:\n Nome: %s\n    nrSerie / Especie: %d / %s\n", familia, ListaAnimais.atual->nome, ListaAnimais.atual->nrSerie, ListaAnimais.atual->especie);
+                                        printf("Descendente #%d:\n Nome: %s\n    nrSerie / Especie: %d / %s\n", familia, procura->nome, procura->nrSerie, procura->especie);
                                     }
-                                    ListaAnimais.atual = ListaAnimais.atual->prox;
+                                    procura = procura->prox;
                                 }
                                 if (familia == 0) {
                                     printf("<Sem descendentes>\n");
@@ -181,18 +179,16 @@ int main(int argc, char** argv) {
                     if (aux >= 0 && aux < ListaAnimais.tamanho_id) {
                         strcpy(aux_char, ListaAnimais.idGiver[aux].especie);
                         printf("\n");
-                        conta = 0;
-                        ListaAnimais.atual = ListaAnimais.head;
-                        while (ListaAnimais.atual != NULL) {
-                            if (!strcmp(ListaAnimais.atual->especie, aux_char)) {
-                                printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
-                                conta++;
+                        ANIMAIS * temp = ListaAnimais.head;
+                        while (temp != NULL) {
+                            if (!strcmp(temp->especie, aux_char)) {
+                                printf("%d - %s\n", temp->nrSerie, temp->nome);
                             }
-                            ListaAnimais.atual = ListaAnimais.atual->prox;
+                            temp = temp->prox;
                         }
                         printf("Escolha o ID do animal que quer transferir:\n");
                         scanf("%d", &aux);
-                        if (aux >= 0 && aux < conta) {
+                        if (aux >= 0) {
                             printf("\n");
                             conta = 0;
                             ANIMAIS * temp = getAnimalByIDandEspecie(aux, aux_char, &ListaAnimais);
@@ -220,7 +216,6 @@ int main(int argc, char** argv) {
                                         printf("[ERRO] Opcao invalida!\n");
                                     }
                                 }
-
                             } else {
                                 printf("[ERRO] Animal nao existe!\n");
                             }
@@ -243,62 +238,68 @@ int main(int argc, char** argv) {
                     aux--;
                     if (aux >= 0 && aux < ListaAnimais.tamanho_id) {
                         conta = 0;
-                        ListaAnimais.atual = ListaAnimais.head;
-                        while (ListaAnimais.atual != NULL) {
-                            if (!strcmp(ListaAnimais.atual->especie, ListaAnimais.idGiver[aux].especie)) {
+                        ANIMAIS * temp = ListaAnimais.head;
+                        while (temp != NULL) {
+                            if (!strcmp(temp->especie, ListaAnimais.idGiver[aux].especie)) {
                                 conta++;
                             }
-                            ListaAnimais.atual = ListaAnimais.atual->prox;
+                            temp = temp->prox;
                         }
                         if (conta >= 2) {
                             ANIMAIS * temp_parente1, * temp_parente2;
                             ANIMAIS temp_filho;
                             strcpy(temp_filho.especie, ListaAnimais.idGiver[aux].especie);
                             printf("\n");
-                            ListaAnimais.atual = ListaAnimais.head;
-                            while (ListaAnimais.atual != NULL) {
-                                if (!strcmp(ListaAnimais.atual->especie, temp_filho.especie)) {
-                                    printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
+                            temp = ListaAnimais.head;
+                            while (temp != NULL) {
+                                if (!strcmp(temp->especie, temp_filho.especie)) {
+                                    printf("%d - %s\n", temp->nrSerie, temp->nome);
                                 }
-                                ListaAnimais.atual = ListaAnimais.atual->prox;
+                                temp = temp->prox;
                             }
                             printf("Escolha o ID do animal que sera o parente 1:\n");
                             scanf("%d", &aux);
                             temp_parente1 = getAnimalByIDandEspecie(aux, temp_filho.especie, &ListaAnimais);
                             if (temp_parente1 != NULL) {
                                 printf("\n");
-                                ListaAnimais.atual = ListaAnimais.head;
-                                while (ListaAnimais.atual != NULL) {
-                                    if (!strcmp(ListaAnimais.atual->especie, temp_filho.especie) && ListaAnimais.atual->nrSerie != temp_parente1->nrSerie) {
-                                        printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
+                                temp = ListaAnimais.head;
+                                while (temp != NULL) {
+                                    if (!strcmp(temp->especie, temp_filho.especie) && temp->nrSerie != temp_parente1->nrSerie) {
+                                        printf("%d - %s\n", temp->nrSerie, temp->nome);
                                     }
-                                    ListaAnimais.atual = ListaAnimais.atual->prox;
+                                    temp = temp->prox;
                                 }
                                 printf("Escolha o ID do animal que sera o parente 2:\n");
                                 scanf("%d", &aux);
                                 temp_parente2 = getAnimalByIDandEspecie(aux, temp_filho.especie, &ListaAnimais);
                                 if (temp_parente2 != NULL) {
                                     temp_filho.peso = temp_parente1->peso * 0.20 + temp_parente2->peso * 0.20;
+                                    conta = 0;
                                     for (int i = 0; i < ArrayAreas.tamanho; i++) {
                                         if (verificaCapacidadeArea(&ListaAnimais, &ArrayAreas.areas[i], temp_filho.peso)) {
                                             printf("%d - %s\n", i, ArrayAreas.areas[i].id);
+                                            conta++;
                                         }
                                     }
                                     printf("Escolhe a area que desejas transferir o animal: \n(se faltar areas, e porque estas nao tem capacidade para o novo animal)\n");
-                                    scanf("%d", &aux);
-                                    if (aux >= 0 && aux < ArrayAreas.tamanho) {
-                                        temp_filho.area = &ArrayAreas.areas[aux];
-                                        printf("Indique o nome do novo animal:");
-                                        scanf("%s", temp_filho.nome);
-                                        temp_filho.parente1 = temp_parente1;
-                                        temp_filho.parente2 = temp_parente2;
-                                        if (AdicionaAnimal(&ListaAnimais, temp_filho)) {
-                                            printf("[LOG] Animal procriado com sucesso!\n");
-                                        } else {
-                                            printf("[ERRO] Ocorreu um erro na procriacao do animal.\n");
+                                    if (conta != 0) {
+                                        scanf("%d", &aux);
+                                        if (aux >= 0 && aux < ArrayAreas.tamanho) {
+                                            temp_filho.area = &ArrayAreas.areas[aux];
+                                            printf("Indique o nome do novo animal:");
+                                            scanf("%s", temp_filho.nome);
+                                            temp_filho.parente1 = temp_parente1;
+                                            temp_filho.parente2 = temp_parente2;
+                                            if (AdicionaAnimal(&ListaAnimais, temp_filho)) {
+                                                printf("[LOG] Animal procriado com sucesso!\n");
+                                            } else {
+                                                printf("[ERRO] Ocorreu um erro na procriacao do animal.\n");
+                                            }
+                                        } else if (aux != -1) {
+                                            printf("[ERRO] Opcao invalida, area inexistente!\n");
                                         }
-                                    } else if (aux != -1) {
-                                        printf("[ERRO] Opcao invalida, area inexistente!\n");
+                                    } else {
+                                        printf("[ERRO] Nao ha areas que suportem o novo animal!\n");
                                     }
                                 } else {
                                     printf("[ERRO] Nao foi encontrado esse animal parente 2!\n");
@@ -325,22 +326,22 @@ int main(int argc, char** argv) {
                         strcpy(aux_char, ListaAnimais.idGiver[aux].especie);
                         printf("\n");
                         conta = 0;
-                        ListaAnimais.atual = ListaAnimais.head;
-                        while (ListaAnimais.atual != NULL) {
-                            if (!strcmp(ListaAnimais.atual->especie, aux_char)) {
-                                printf("%d - %s\n", ListaAnimais.atual->nrSerie, ListaAnimais.atual->nome);
+                        ANIMAIS * temp = ListaAnimais.head;
+                        while (temp != NULL) {
+                            if (!strcmp(temp->especie, aux_char)) {
+                                printf("%d - %s\n", temp->nrSerie, temp->nome);
                                 conta++;
                             }
-                            ListaAnimais.atual = ListaAnimais.atual->prox;
+                            temp = temp->prox;
                         }
-                        if(conta == 0){
+                        if (conta == 0) {
                             printf("[ERRO] Nao ha animais desta especie para serem eliminados!\n.");
                             pausa();
                             break;
                         }
                         printf("Escolha o ID do animal que deseja eliminar:\n");
                         scanf("%d", &aux);
-                        if (aux >= 0 && aux < conta) {
+                        if (aux >= 0) {
                             if (eliminaNodo(aux, aux_char, &ListaAnimais)) {
                                 printf("[LOG] Animal eliminado com sucesso!\n");
                             } else {

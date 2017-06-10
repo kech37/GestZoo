@@ -1,3 +1,0 @@
-Leao Simba 250 AreaB
-Zebra Gloribela 100 AreaA
-Leao Carlos 250 AreaC

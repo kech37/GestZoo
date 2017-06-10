@@ -75,6 +75,7 @@ bool AdicionaAnimal(struct AnimaisHelper * ListaAnimais, ANIMAIS animal) {
 
         ListaAnimais->atual->prox = temp;
         ListaAnimais->atual = temp;
+        
         return true;
     }
 }
@@ -116,12 +117,12 @@ void listarTodosAnimais(struct AnimaisHelper * ListaAnimais) {
 }
 
 ANIMAIS * getAnimalByIDandEspecie(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimais) {
-    ListaAnimais->atual = ListaAnimais->head;
-    while (ListaAnimais->atual != NULL) {
-        if (ListaAnimais->atual->nrSerie == nrSerie && !strcmp(ListaAnimais->atual->especie, especie)) {
-            return ListaAnimais->atual;
+    ANIMAIS *temp = ListaAnimais->head;
+    while (temp != NULL) {
+        if (temp->nrSerie == nrSerie && !strcmp(temp->especie, especie)) {
+            return temp;
         }
-        ListaAnimais->atual = ListaAnimais->atual->prox;
+        temp = temp->prox;
     }
     return NULL;
 }
@@ -162,15 +163,15 @@ bool eliminaNodo(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimai
             ListaAnimais->head = eliminar->prox;
         }
     }
-    ListaAnimais->atual = ListaAnimais->head;
-    while (ListaAnimais->atual != NULL) {
-        if (ListaAnimais->atual->parente1 != NULL && ListaAnimais->atual->parente1->nrSerie == eliminar->nrSerie && !strcmp(ListaAnimais->atual->parente1->especie, eliminar->especie)) {
-            ListaAnimais->atual->parente1 = NULL;
+    ANIMAIS * temp = ListaAnimais->head;
+    while (temp != NULL) {
+        if (temp->parente1 != NULL && temp->parente1->nrSerie == eliminar->nrSerie && !strcmp(temp->parente1->especie, eliminar->especie)) {
+            temp->parente1 = NULL;
         }
-        if (ListaAnimais->atual->parente2 != NULL && ListaAnimais->atual->parente2->nrSerie == eliminar->nrSerie && !strcmp(ListaAnimais->atual->parente2->especie, eliminar->especie)) {
-            ListaAnimais->atual->parente2 = NULL;
+        if (temp->parente2 != NULL && temp->parente2->nrSerie == eliminar->nrSerie && !strcmp(temp->parente2->especie, eliminar->especie)) {
+            temp->parente2 = NULL;
         }
-        ListaAnimais->atual = ListaAnimais->atual->prox;
+        temp = temp->prox;
     }
     free(eliminar);
     ListaAnimais->tamanho--;
@@ -179,12 +180,12 @@ bool eliminaNodo(int nrSerie, char especie[], struct AnimaisHelper * ListaAnimai
 }
 
 bool checkAnimalinArea(struct AnimaisHelper * ListaAnimais, char area[]) {
-    ListaAnimais->atual = ListaAnimais->head;
-    while (ListaAnimais->atual != NULL) {
-        if (!strcmp(ListaAnimais->atual->area->id, area)) {
+    ANIMAIS * temp = ListaAnimais->head;
+    while (temp != NULL) {
+        if (!strcmp(temp->area->id, area)) {
             return true;
         }
-        ListaAnimais->atual = ListaAnimais->atual->prox;
+        temp = temp->prox;
     }
     return false;
 }
