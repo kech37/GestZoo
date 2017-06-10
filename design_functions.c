@@ -43,5 +43,4 @@ void pausa() {
     printf("\nPrima [QUALQUER TECLA] para continuar...");
     getchar();
     getchar();
-
 }

@@ -12,9 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <ctype.h>
 
-#define MAX 50
+#define MAX 25
 
 #define FICHEIRO_AREAS "areas.txt"
 #define FICHEIRO_ANIMAIS_BINARIO "animais.bin"
